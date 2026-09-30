@@ -1,0 +1,74 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@theme {
+    --color-luxury-bg: #FAFAFA;
+    --color-luxury-card: #FFFFFF;
+    --color-luxury-surface: #F4F4F5;
+    --color-luxury-dark: #121212;
+    --color-luxury-charcoal: #1E1E22;
+    --color-luxury-muted: #71717A;
+    --color-luxury-border: #E4E4E7;
+
+    --color-triadic-gold: #C5A880;
+    --color-triadic-gold-hover: #B5976F;
+    --color-triadic-teal: #2A4843;
+    --color-triadic-teal-hover: #1F3834;
+    --color-triadic-plum: #63323E;
+    --color-triadic-plum-hover: #502631;
+
+    --font-serif: "Playfair Display", "Cormorant Garamond", Georgia, serif;
+    --font-sans: "Plus Jakarta Sans", "Inter", system-ui, -apple-system, sans-serif;
+
+    --shadow-luxury-subtle: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+    --shadow-luxury-card: 0 4px 20px -2px rgba(18, 18, 18, 0.04), 0 2px 6px -1px rgba(18, 18, 18, 0.02);
+    --shadow-luxury-hover: 0 12px 30px -4px rgba(18, 18, 18, 0.07), 0 4px 10px -2px rgba(18, 18, 18, 0.03);
+    --shadow-luxury-elevated: 0 20px 35px -5px rgba(18, 18, 18, 0.08), 0 8px 15px -3px rgba(18, 18, 18, 0.04);
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background-color: var(--color-luxury-bg);
+    color: var(--color-luxury-dark);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-serif);
+    letter-spacing: -0.015em;
+    color: var(--color-luxury-dark);
+}
+
+/* Các class tiện ích border mỏng 1px và shadow nhẹ nhàng chuẩn luxury */
+.border-luxury-border {
+    border: 1px solid var(--color-luxury-border);
+}
+
+.shadow-luxury-subtle {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+}
+
+.shadow-luxury-card {
+    box-shadow: 0 4px 20px -2px rgba(18, 18, 18, 0.04), 0 2px 6px -1px rgba(18, 18, 18, 0.02);
+}
+
+.shadow-luxury-hover {
+    box-shadow: 0 12px 30px -4px rgba(18, 18, 18, 0.07), 0 4px 10px -2px rgba(18, 18, 18, 0.03);
+}
+
+.shadow-luxury-elevated {
+    box-shadow: 0 20px 35px -5px rgba(18, 18, 18, 0.08), 0 8px 15px -3px rgba(18, 18, 18, 0.04);
+}
