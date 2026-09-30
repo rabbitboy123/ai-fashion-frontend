@@ -18,7 +18,8 @@ const cardItemVariants = {
   },
 };
 
-const DEFAULT_PRODUCT_IMAGE = '/src/assets/images/minimal-white-blazer.jpg.jpg';
+const FALLBACK_PRODUCT_IMAGE =
+  'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800&auto=format&fit=crop';
 
 export const ProductCard = React.memo(({ product, onAddToCart }) => {
   const { addToCart } = useCart();
@@ -97,11 +98,11 @@ export const ProductCard = React.memo(({ product, onAddToCart }) => {
             title={`Xem chi tiết tác phẩm ${name}`}
           >
             <img
-              src={imageUrl || DEFAULT_PRODUCT_IMAGE}
+              src={imageUrl || FALLBACK_PRODUCT_IMAGE}
               alt={name}
               onError={(e) => {
                 e.currentTarget.onerror = null;
-                e.currentTarget.src = DEFAULT_PRODUCT_IMAGE;
+                e.currentTarget.src = FALLBACK_PRODUCT_IMAGE;
               }}
               className="w-full h-full object-cover object-center transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
               loading="lazy"

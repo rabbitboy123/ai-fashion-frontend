@@ -514,11 +514,11 @@ export const AIStylistPage = () => {
                           <div className="bg-[#FFFFFF] rounded-2xl border border-[#E4E4E7] overflow-hidden shadow-sm hover:shadow-xl hover:border-[#C5A880]/50 transition-all duration-300 flex flex-col h-full group [transform-style:preserve-3d]">
                             <div className="relative aspect-3/4 bg-[#F4F4F5] overflow-hidden [transform:translateZ(10px)]">
                               <img
-                                src={item.imageUrl || '/src/assets/images/minimal-white-blazer.jpg.jpg'}
+                                src={item.imageUrl || 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800&auto=format&fit=crop'}
                                 alt={item.name}
                                 onError={(e) => {
                                   e.currentTarget.onerror = null;
-                                  e.currentTarget.src = '/src/assets/images/minimal-white-blazer.jpg.jpg';
+                                  e.currentTarget.src = 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800&auto=format&fit=crop';
                                 }}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                               />

@@ -71,11 +71,11 @@ export const ProductShowroom3D = ({
         {/* Layer 1: Product Artwork (Base Z) */}
         <div className="w-full h-full relative overflow-hidden bg-[#F4F4F5]">
           <img
-            src={imageUrl || '/src/assets/images/minimal-white-blazer.jpg.jpg'}
+            src={imageUrl || 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800&auto=format&fit=crop'}
             alt={alt}
             onError={(e) => {
               e.currentTarget.onerror = null;
-              e.currentTarget.src = '/src/assets/images/minimal-white-blazer.jpg.jpg';
+              e.currentTarget.src = 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=800&auto=format&fit=crop';
             }}
             className="w-full h-full object-cover object-center transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
           />
