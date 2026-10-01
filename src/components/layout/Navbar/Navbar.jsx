@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Sparkles, ShoppingBag, User, LogOut, ChevronDown, Shield } from 'lucide-react';
 import useAuth from '@/hooks/useAuth';
 import useCart from '@/hooks/useCart';
+import BrandIconP from '@/components/common/BrandIconP';
 
 export const Navbar = () => {
   const location = useLocation();
@@ -37,12 +38,15 @@ export const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
-          {/* Logo Typography Serif Tối Giản */}
-          <Link to="/" className="flex items-center gap-1.5 group">
-            <span className="font-serif font-bold text-2xl tracking-[0.2em] text-[#121212] group-hover:text-[#C5A880] transition-colors">
-              AI FASHION
-            </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C5A880] mb-3 inline-block" />
+          {/* Logo Typography Serif Tối Giản kết hợp Monogram P */}
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <BrandIconP size={32} className="group-hover:scale-105 transition-transform duration-300" />
+            <div className="flex items-center gap-1.5">
+              <span className="font-serif font-bold text-2xl tracking-[0.2em] text-[#121212] group-hover:text-[#C5A880] transition-colors">
+                AI FASHION
+              </span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#C5A880] mb-3 inline-block" />
+            </div>
           </Link>
 
           {/* Navigation Links */}
