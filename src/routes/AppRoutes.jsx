@@ -14,6 +14,7 @@ const CartPage = lazy(() => import('@/pages/Cart/CartPage'));
 const CheckoutPage = lazy(() => import('@/pages/Checkout/CheckoutPage'));
 const LoginPage = lazy(() => import('@/pages/Auth/LoginPage'));
 const RegisterPage = lazy(() => import('@/pages/Auth/RegisterPage'));
+const PasswordResetPage = lazy(() => import('@/pages/Auth/PasswordResetPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFound/NotFoundPage'));
 const AdminDashboardPage = lazy(() => import('@/pages/Admin/AdminDashboardPage'));
 
@@ -49,6 +50,7 @@ export const AppRoutes = () => {
 
           <Route path="login" element={<LoginPage />} />
           <Route path="register" element={<RegisterPage />} />
+          <Route path="forgot-password" element={<PasswordResetPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

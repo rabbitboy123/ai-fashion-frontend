@@ -1,30 +1,15 @@
 import apiInstance from './api';
 import { productService } from './productService';
-import { orderService } from './orderService';
+import { API_ENDPOINTS } from '@/constants/apiEndpoints';
 
 export const adminService = {
   /**
    * Lấy danh sách toàn bộ sản phẩm kèm đầy đủ biến thể thật từ Backend Neon Database
    */
   getProductsWithVariants: async () => {
-    try {
-      const response = await apiInstance.get('/admin/products');
-      const data = response.data?.data !== undefined ? response.data.data : response.data;
-      if (Array.isArray(data) && data.length > 0) {
-        return data;
-      }
-      // Fallback nếu endpoint admin trả về rỗng, lấy từ danh mục public
-      const res = await productService.getProducts({ size: 100 });
-      return res?.data?.content || res?.content || [];
-    } catch (err) {
-      console.error('Lỗi khi tải danh sách sản phẩm quản trị từ Backend:', err);
-      try {
-        const res = await productService.getProducts({ size: 100 });
-        return res?.data?.content || res?.content || [];
-      } catch {
-        return [];
-      }
-    }
+    const response = await apiInstance.get('/admin/products');
+    const data = response.data?.data !== undefined ? response.data.data : response.data;
+    return Array.isArray(data) ? data : [];
   },
 
   /**
@@ -94,21 +79,15 @@ export const adminService = {
    * Lấy danh sách tất cả các đơn hàng may đo thật từ Backend Database
    */
   getAllOrders: async () => {
-    try {
-      const response = await apiInstance.get('/admin/orders');
-      const data = response.data?.data !== undefined ? response.data.data : response.data;
-      if (Array.isArray(data)) {
-        return data;
-      }
-      return [];
-    } catch (err) {
-      console.warn('Lỗi khi tải danh sách đơn hàng cho Admin từ backend:', err?.message || err);
-      const myOrders = await orderService.getMyOrders();
-      if (Array.isArray(myOrders) && myOrders.length > 0) {
-        return myOrders;
-      }
-      return [];
-    }
+    const response = await apiInstance.get(API_ENDPOINTS.ADMIN.ORDERS);
+    const data = response.data?.data !== undefined ? response.data.data : response.data;
+    return Array.isArray(data) ? data : [];
+  },
+
+  getPaymentReconciliation: async () => {
+    const response = await apiInstance.get(API_ENDPOINTS.ADMIN.PAYMENT_RECONCILIATION);
+    const data = response.data?.data !== undefined ? response.data.data : response.data;
+    return Array.isArray(data) ? data : [];
   },
 
   /**
@@ -116,7 +95,7 @@ export const adminService = {
    * (PENDING -> CONFIRMED -> SHIPPING -> DELIVERED -> CANCELLED)
    */
   updateOrderStatus: async (orderId, newStatus) => {
-    const response = await apiInstance.put(`/admin/orders/${orderId}/status`, {
+    const response = await apiInstance.put(API_ENDPOINTS.ADMIN.ORDER_STATUS(orderId), {
       status: newStatus,
     });
     return response.data?.data || response.data;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Sparkles,
@@ -33,6 +33,19 @@ export const CheckoutPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [orderSuccess, setOrderSuccess] = useState(null);
+
+  useEffect(() => {
+    if (!orderSuccess?.id || orderSuccess.paymentMethod !== 'BANK_TRANSFER' || orderSuccess.paymentStatus !== 'PENDING') return undefined;
+    const timer = window.setInterval(async () => {
+      try {
+        const latestOrder = await orderService.getOrderById(orderSuccess.id);
+        if (latestOrder) setOrderSuccess((current) => ({ ...current, ...latestOrder }));
+      } catch {
+        // Keep the displayed order and retry on the next interval.
+      }
+    }, 5000);
+    return () => window.clearInterval(timer);
+  }, [orderSuccess?.id, orderSuccess?.paymentMethod, orderSuccess?.paymentStatus]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -133,6 +146,16 @@ export const CheckoutPage = () => {
               </span>
             </div>
           </div>
+
+          {orderSuccess.paymentMethod === 'BANK_TRANSFER' && (
+            <div className="rounded-2xl border border-[#C5A880]/40 bg-[#C5A880]/5 p-5 text-left space-y-3">
+              <h2 className="font-serif text-lg text-[#121212]">Hoàn tất chuyển khoản</h2>
+              {orderSuccess.paymentQrUrl && <img src={orderSuccess.paymentQrUrl} alt="Mã QR thanh toán đơn hàng" className="w-52 h-52 mx-auto object-contain rounded-xl bg-white" />}
+              <p className="text-xs text-[#71717A]">Nội dung chuyển khoản: <strong className="font-mono text-[#121212]">{orderSuccess.paymentReference || orderSuccess.orderCode}</strong></p>
+              {orderSuccess.paymentExpiresAt && <p className="text-xs text-[#71717A]">Mã thanh toán hết hạn lúc {new Date(orderSuccess.paymentExpiresAt).toLocaleString('vi-VN')}.</p>}
+              <p className="text-xs text-[#71717A]">Trạng thái thanh toán: <strong className="text-[#121212]">{orderSuccess.paymentStatus || 'PENDING'}</strong></p>
+            </div>
+          )}
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
             <Link to="/products" className="w-full sm:w-auto">
@@ -439,7 +462,7 @@ export const CheckoutPage = () => {
                 <span>Đang Khởi Tạo Đơn May Đo...</span>
               ) : (
                 <>
-                  <span>Xác Nhận Đặt May Đo (COD)</span>
+                  <span>{formData.paymentMethod === 'COD' ? 'Xác Nhận Đặt May Đo (COD)' : 'Tạo Đơn & Lấy Mã Thanh Toán'}</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}

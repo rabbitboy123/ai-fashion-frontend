@@ -30,6 +30,20 @@ export const authService = {
     const response = await apiInstance.get(API_ENDPOINTS.AUTH.ME);
     return response.data;
   },
+
+  requestPasswordReset: async (email) => {
+    const response = await apiInstance.post(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, { email });
+    return response.data;
+  },
+
+  resetPassword: async ({ email, code, newPassword }) => {
+    const response = await apiInstance.post(API_ENDPOINTS.AUTH.RESET_PASSWORD, {
+      email,
+      code,
+      newPassword,
+    });
+    return response.data;
+  },
 };
 
 export default authService;

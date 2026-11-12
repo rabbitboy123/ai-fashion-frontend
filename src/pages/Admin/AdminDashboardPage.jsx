@@ -43,6 +43,7 @@ export const AdminDashboardPage = () => {
   const [activeTab, setActiveTab] = useState('inventory'); // 'inventory' | 'orders'
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [paymentReconciliation, setPaymentReconciliation] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedProduct, setExpandedProduct] = useState(null);
@@ -92,6 +93,11 @@ export const AdminDashboardPage = () => {
         if (!isMounted) return;
         setProducts(productList);
         setOrders(orderList);
+        const reconciliation = await adminService.getPaymentReconciliation().catch((err) => {
+          console.warn('Không thể tải giao dịch cần đối soát:', err);
+          return [];
+        });
+        setPaymentReconciliation(reconciliation);
 
         const catList = catRes?.data || catRes || [];
         if (Array.isArray(catList) && catList.length > 0) {
@@ -745,21 +751,21 @@ export const AdminDashboardPage = () => {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleUpdateOrderStatus(order.id, 'CONFIRMED')}
-                        disabled={order.status === 'CONFIRMED'}
+                        disabled={order.status === 'CONFIRMED' || (order.paymentMethod === 'BANK_TRANSFER' && order.paymentStatus !== 'PAID')}
                         className="px-3 py-1 rounded-lg text-[10px] font-semibold uppercase tracking-wider border border-[#E4E4E7] bg-white hover:bg-[#F4F4F5] text-[#121212] disabled:opacity-40 cursor-pointer"
                       >
                         Xác Nhận May Đo
                       </button>
                       <button
                         onClick={() => handleUpdateOrderStatus(order.id, 'SHIPPING')}
-                        disabled={order.status === 'SHIPPING'}
+                        disabled={order.status === 'SHIPPING' || (order.paymentMethod === 'BANK_TRANSFER' && order.paymentStatus !== 'PAID')}
                         className="px-3 py-1 rounded-lg text-[10px] font-semibold uppercase tracking-wider border border-[#E4E4E7] bg-white hover:bg-[#F4F4F5] text-[#121212] disabled:opacity-40 cursor-pointer"
                       >
                         Giao Hàng
                       </button>
                       <button
                         onClick={() => handleUpdateOrderStatus(order.id, 'DELIVERED')}
-                        disabled={order.status === 'DELIVERED'}
+                        disabled={order.status === 'DELIVERED' || (order.paymentMethod === 'BANK_TRANSFER' && order.paymentStatus !== 'PAID')}
                         className="px-3 py-1 rounded-lg text-[10px] font-semibold uppercase tracking-wider bg-[#2A4843] text-white hover:bg-[#121212] disabled:opacity-40 cursor-pointer"
                       >
                         Đã Giao Hàng
@@ -785,7 +791,7 @@ export const AdminDashboardPage = () => {
                       <strong className="text-base font-serif text-[#121212]">
                         {formatCurrency(order.totalAmount)}
                       </strong>{' '}
-                      <span className="text-[10px] text-[#71717A]">({order.paymentMethod})</span>
+                      <span className="text-[10px] text-[#71717A]">({order.paymentMethod}{order.paymentStatus ? ` · ${order.paymentStatus}` : ''})</span>
                     </div>
                   </div>
 
@@ -809,6 +815,22 @@ export const AdminDashboardPage = () => {
               ))
             )}
           </div>
+          <section className="rounded-3xl bg-white border border-[#E4E4E7] overflow-hidden shadow-xs">
+            <div className="p-5 border-b border-[#E4E4E7]">
+              <h2 className="font-serif text-lg text-[#121212]">Giao dịch chuyển khoản cần đối soát ({paymentReconciliation.length})</h2>
+              <p className="text-xs text-[#71717A] mt-1">Các giao dịch SePay backend chưa tự ghép được với đơn hoặc cần kiểm tra thủ công.</p>
+            </div>
+            {paymentReconciliation.length === 0 ? (
+              <p className="p-6 text-xs text-[#71717A]">Không có giao dịch cần đối soát.</p>
+            ) : (
+              <div className="overflow-x-auto"><table className="w-full text-left text-xs">
+                <thead className="bg-[#FAFAFA] text-[#71717A]"><tr>{['Mã tham chiếu', 'Mã giao dịch SePay', 'Đơn hàng', 'Số tiền', 'Nội dung', 'Thời gian nhận'].map((label) => <th key={label} className="px-4 py-3 font-semibold">{label}</th>)}</tr></thead>
+                <tbody className="divide-y divide-[#E4E4E7]">{paymentReconciliation.map((transaction) => (
+                  <tr key={transaction.transactionId} className="text-[#121212]"><td className="px-4 py-3 font-mono">{transaction.paymentReference || transaction.paymentCode || '—'}</td><td className="px-4 py-3">{transaction.sepayTransactionId || '—'}</td><td className="px-4 py-3">{transaction.orderId || 'Chưa ghép'}</td><td className="px-4 py-3">{formatCurrency(transaction.transferAmount || 0)}</td><td className="px-4 py-3 max-w-xs truncate" title={transaction.content}>{transaction.content || '—'}</td><td className="px-4 py-3">{transaction.receivedAt ? new Date(transaction.receivedAt).toLocaleString('vi-VN') : '—'}</td></tr>
+                ))}</tbody>
+              </table></div>
+            )}
+          </section>
         </div>
       )}
 

@@ -12,6 +12,8 @@ export const API_ENDPOINTS = {
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
     ME: '/auth/me',
+    FORGOT_PASSWORD: '/auth/forgot-password',
+    RESET_PASSWORD: '/auth/reset-password',
   },
 
   // Cart Endpoints
@@ -34,5 +36,11 @@ export const API_ENDPOINTS = {
   AI: {
     RECOMMEND: '/ai/recommend',
     HISTORY: '/ai/history',
+  },
+
+  ADMIN: {
+    ORDERS: '/admin/orders',
+    ORDER_STATUS: (id) => `/admin/orders/${id}/status`,
+    PAYMENT_RECONCILIATION: '/admin/payments/reconciliation',
   },
 };

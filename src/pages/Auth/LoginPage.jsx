@@ -97,6 +97,12 @@ export const LoginPage = () => {
                 </p>
               </div>
 
+              {location.state?.message && (
+                <div role="status" className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs animate-fadeIn">
+                  {location.state.message}
+                </div>
+              )}
+
               {/* Thông báo lỗi nếu có */}
               {errorMessage && (
                 <div className="mb-4 p-3 rounded-xl bg-red-50/80 border border-red-200/80 flex items-start gap-2.5 text-red-700 text-xs animate-fadeIn">
@@ -128,9 +134,9 @@ export const LoginPage = () => {
                     <label className="block text-xs font-semibold uppercase tracking-wider text-[#121212]">
                       Mật Khẩu
                     </label>
-                    <a href="#forgot" className="text-[11px] text-[#71717A] hover:text-[#C5A880] transition-colors">
+                    <Link to="/forgot-password" className="text-[11px] text-[#71717A] hover:text-[#C5A880] transition-colors">
                       Quên mật khẩu?
-                    </a>
+                    </Link>
                   </div>
                   <div className="relative">
                     <Lock className="w-4 h-4 text-[#71717A] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />

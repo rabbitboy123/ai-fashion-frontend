@@ -1,7 +1,6 @@
 import apiInstance from './api';
 import { API_ENDPOINTS } from '@/constants/apiEndpoints';
 import { tokenStorage } from '@/utils/tokenStorage';
-import cartService from './cartService';
 
 const LOCAL_ORDERS_KEY = 'bespoke_vault_orders';
 
@@ -11,17 +10,6 @@ const getLocalOrders = () => {
     return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
-  }
-};
-
-const saveLocalOrder = (order) => {
-  try {
-    const orders = getLocalOrders();
-    orders.unshift(order);
-    localStorage.setItem(LOCAL_ORDERS_KEY, JSON.stringify(orders));
-    return order;
-  } catch {
-    return order;
   }
 };
 
@@ -37,39 +25,13 @@ export const orderService = {
         const response = await apiInstance.post(API_ENDPOINTS.ORDERS.CREATE, orderData);
         return response.data?.data || response.data;
       } catch (err) {
-        // Nếu backend phản hồi lỗi cụ thể (ví dụ hết hàng, sai dữ liệu), ném lỗi để hiển thị cho người dùng
-        if (err.response?.data?.message) {
-          throw err;
-        }
-        console.warn('Backend offline, lưu đơn hàng cục bộ tạm thời:', err);
+        // Checkout là giao dịch thật; không báo thành công bằng đơn hàng giả khi API lỗi.
+        throw err;
       }
     }
 
-    const cart = await cartService.getCart();
-    const newOrder = {
-      id: Date.now(),
-      orderCode: `BESPOKE-${Math.floor(100000 + Math.random() * 900000)}`,
-      receiverName: orderData.receiverName,
-      receiverPhone: orderData.receiverPhone,
-      shippingAddress: orderData.shippingAddress,
-      paymentMethod: orderData.paymentMethod || 'COD',
-      status: 'PENDING',
-      totalAmount: cart.totalAmount || 0,
-      items: (cart.items || []).map((item) => ({
-        id: `item_${Date.now()}_${Math.random()}`,
-        productName: item.productName,
-        sizeName: item.sizeName,
-        colorName: item.colorName,
-        unitPrice: item.unitPrice,
-        quantity: item.quantity,
-        subtotal: item.unitPrice * item.quantity,
-      })),
-      createdAt: new Date().toISOString(),
-    };
+    throw new Error('Vui lòng đăng nhập để tạo đơn hàng.');
 
-    saveLocalOrder(newOrder);
-    await cartService.clearCart();
-    return newOrder;
   },
 
   /**
